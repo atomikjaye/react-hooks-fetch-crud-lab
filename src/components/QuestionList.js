@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import QuestionItem from "./QuestionItem"
 
-function QuestionList() {
-  const [questionsArr, setQuestionsArr] = useState([])
+function QuestionList({ questionsArr, setQuestionsArr }) {
+
 
   // Fetch using useEFFECT because user isn't starting the request
   useEffect(() => {
@@ -11,11 +11,22 @@ function QuestionList() {
       .then(questions => setQuestionsArr(questions))
   }, [])
 
+  function handleDelete(id) {
+    let newArr = [...questionsArr]
+    console.log(id)
+    fetch(`http://localhost:4000/questions/${id}`, {
+      method: 'DELETE',
+    })
+      .then(setQuestionsArr(newArr.filter((question) => question.id !== id)))
+
+  }
+
   const displayQuestions = questionsArr.map((question) => {
     return (
       <QuestionItem
         key={question.id}
         question={question}
+        onDelete={handleDelete}
       />
     )
   })
