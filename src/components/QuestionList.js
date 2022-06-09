@@ -18,14 +18,58 @@ function QuestionList({ questionsArr, setQuestionsArr }) {
       method: 'DELETE',
     })
       .then(setQuestionsArr(newArr.filter((question) => question.id !== id)))
-
   }
+
+  // function handleChangeAnswer(id, index){
+  //   let changeData = {
+  //     id
+  //   }
+  //   fetch(`http://localhost:4000/questions${id}`, {
+  //     method: 'PATCH',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({correctIndex: {index}})
+  //   })
+  // }
+
+  function handleChangedAnswer(id, correctIndex) {
+    let dropdownChange = {
+      correctIndex: correctIndex
+    }
+    fetch(`http://localhost:4000/questions/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dropdownChange)
+    })
+      .then(r => r.json())
+      .then(data => {
+        console.log("Original", questionsArr)
+        let updatedArr = questionsArr.map((question) => {
+          if (question.id === id) {
+            console.log(id)
+            question.correctIndex = correctIndex
+            return question
+          } else {
+            return question
+          }
+        })
+
+        setQuestionsArr(updatedArr)
+
+      })
+  }
+
+
 
   const displayQuestions = questionsArr.map((question) => {
     return (
       <QuestionItem
         key={question.id}
         question={question}
+        handleChangedAnswer={handleChangedAnswer}
         onDelete={handleDelete}
       />
     )
