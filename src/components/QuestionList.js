@@ -16,8 +16,8 @@ function QuestionList({ questionsArr, setQuestionsArr }) {
     console.log(id)
     fetch(`http://localhost:4000/questions/${id}`, {
       method: 'DELETE',
-    })
-      .then(setQuestionsArr(newArr.filter((question) => question.id !== id)))
+    }).then(r => r.json())
+      .then(() => setQuestionsArr(newArr.filter((question) => question.id !== id)))
   }
 
   // function handleChangeAnswer(id, index){
